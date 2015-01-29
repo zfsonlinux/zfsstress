@@ -12,8 +12,9 @@ set -x
 
 while :; do
 	randsleep 300
-	if $SUDO $ZPOOL export $POOL ; then
-		$SUDO rm -f $MOUNTPOINT/*
-		$SUDO $ZPOOL import $ZPOOL_DEVDIR_OPT $POOL
-	fi
+	while ! $SUDO $ZPOOL export $POOL ; do
+		sleep 1
+	done
+	$SUDO rm -f $MOUNTPOINT/*
+	$SUDO $ZPOOL import $ZPOOL_IMPORT_OPT $POOL
 done

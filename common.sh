@@ -1,10 +1,11 @@
 export POOL="tank"
 export DATASET="$POOL/fish"
 export MOUNTPOINT="/$DATASET"
-export ZFS="./cmd/zfs/zfs"
-export ZPOOL="./cmd/zpool/zpool"
+export ZFS="/home/bass6/zfs/cmd/zfs/zfs"
+export ZPOOL="/home/bass6/zfs/cmd/zpool/zpool"
 export MAX_WRITE_SIZE=$(( 4 * 1024 * 1024 ))
-#export ZPOOL_DEVDIR_OPT="-d /tmp"
+#export ZFS_CREATE_OPT='-o dnodesize=$(( 512 * $(( 1 + $RANDOM % 32 ))))'
+#export ZPOOL_IMPORT_OPT="-d /tmp"
 ## comment SUDO if running scripts as root
 export SUDO="sudo"
 

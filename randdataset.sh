@@ -15,7 +15,7 @@ while :; do
 
 	# Create a dataset then randomly destroy datasets
 	# with 50% probability.
-	$SUDO $ZFS create $POOL/`mktemp -u XXXXXXXX`
+	$SUDO $ZFS create `eval echo $ZFS_CREATE_OPT` $POOL/`mktemp -u XXXXXXXX`
 	$SUDO $ZFS list -H -o name -t filesystem| grep /| grep -v "^$DATASET$"|
 	while read ds ; do
 		if coinflip 50 ; then
