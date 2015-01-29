@@ -14,12 +14,13 @@ while :; do
 	randsleep 60
 	wait_for_mount $MOUNTPOINT
 	# Truncate each file with 2/3 probability, otherwise
-	# write up to 128k to it.
+	# write up to MAX_WRITE_SIZE to it.
 	for f in $MOUNTPOINT/* ; do
 		if coinflip 66 ; then
 			$SUDO dd if=/dev/null of=$f
 			continue
 		fi
-		$SUDO dd if=/dev/urandom of=$f bs=512 count=$(( $RANDOM % 256 ))
+		$SUDO dd if=/dev/urandom of=$f bs=512 \
+			count=$(( $RANDOM % $(( MAX_WRITE_SIZE / 512 )) ))
 	done
 done
