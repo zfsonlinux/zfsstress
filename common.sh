@@ -3,7 +3,7 @@ export DATASET="$POOL/fish"
 export MOUNTPOINT="/$DATASET"
 export ZFS="./cmd/zfs/zfs"
 export ZPOOL="./cmd/zpool/zpool"
-export ZPOOL_DEVDIR_OPT="-d /tmp"
+#export ZPOOL_DEVDIR_OPT="-d /tmp"
 ## comment SUDO if running scripts as root
 export SUDO="sudo"
 
