@@ -22,6 +22,6 @@
 (./randdataset.sh < /dev/null > randdataset.log 2>&1 & )
 
 # Randomly change dataset properties.
-#(./randproprecordesize.sh < /dev/null > randproprecordsize.log 2>&1 & )
+#(./randproprecordsize.sh < /dev/null > randproprecordsize.log 2>&1 & )
 (./randpropdnodesize.sh < /dev/null > randpropdnodesize.log 2>&1 & )
 (./randpropxattr.sh < /dev/null > randpropxattr.log 2>&1 & )
