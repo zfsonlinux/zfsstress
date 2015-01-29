@@ -1,0 +1,2 @@
+Set variables in common.sh to suit environment, then execute
+runstress.sh.  Monitor *.log to see if things are working as expected.
