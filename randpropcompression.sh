@@ -12,9 +12,5 @@ set -x
 
 while :; do
 	randsleep 60
-	for f in $MOUNTPOINT/* ; do
-		if coinflip 33 ; then
-			$SUDO rm "$f"
-		fi
-	done
+	$SUDO $ZFS set compression=$(rand_compression) $DATASET
 done

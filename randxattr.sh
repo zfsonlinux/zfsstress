@@ -16,9 +16,9 @@ while :; do
 	for f in $MOUNTPOINT/* ; do
 		if coinflip 50 ; then
 			v=`randbase64`
-			$SUDO setfattr -n user.foo -v 0s$v $f
+			$SUDO setfattr -h -n trusted.foo -v 0s$v "$f"
 		else
-			$SUDO setfattr -x user.foo $f
+			$SUDO setfattr -h -x trusted.foo "$f"
 		fi
 	done
 done

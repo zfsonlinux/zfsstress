@@ -14,7 +14,8 @@ while :; do
 	wait_for_mount $MOUNTPOINT
 
 	for ((i=0; i< $(( $RANDOM % 256 )); i++)) ; do
-		$SUDO mktemp $MOUNTPOINT/XXXXXXXXXX
+		file="`randstring $(( 1 + $RANDOM % $MAX_FILENAME_LEN ))`"
+		$SUDO touch "$MOUNTPOINT/$file"
 	done
 	randsleep 60
 done

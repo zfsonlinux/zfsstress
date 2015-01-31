@@ -13,6 +13,9 @@
 ./randxattr.sh < /dev/null > randxattr.log 2>&1 &
 ./randxattr.sh < /dev/null > /dev/null 2>&1 &
 
+./randsymlink.sh < /dev/null > randsymlink.log 2>&1 &
+./randsymlink.sh < /dev/null > /dev/null 2>&1 &
+
 # Pool operations.
 ./randimportexport.sh < /dev/null > randimportexport.log 2>&1 &
 ./randscrub.sh < /dev/null > randscrub.log 2>&1 &
@@ -22,9 +25,10 @@
 ./randdataset.sh < /dev/null > randdataset.log 2>&1 &
 
 # Randomly change dataset properties.
-#(./randproprecordsize.sh < /dev/null > randproprecordsize.log 2>&1 & )
+./randproprecordsize.sh < /dev/null > randproprecordsize.log 2>&1 &
 ./randpropdnodesize.sh < /dev/null > randpropdnodesize.log 2>&1 &
 ./randpropxattr.sh < /dev/null > randpropxattr.log 2>&1 &
+./randpropcompression.sh < /dev/null > randpropcompression.log 2>&1 &
 
 killjobs()
 {

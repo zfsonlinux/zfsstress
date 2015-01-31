@@ -11,10 +11,12 @@ fi
 set -x
 
 while :; do
-	randsleep 60
-	for f in $MOUNTPOINT/* ; do
-		if coinflip 33 ; then
-			$SUDO rm "$f"
-		fi
+	wait_for_mount $MOUNTPOINT
+
+	for ((i=0; i< $(( $RANDOM % 256 )); i++)) ; do
+		link=$MOUNTPOINT/$( randstring $(( 1 + $RANDOM % 255 )) )
+		target=$( randstring $(( 1 + $RANDOM % 4096 )) )
+		$SUDO ln -sf "$target" "$link"
 	done
+	randsleep 60
 done

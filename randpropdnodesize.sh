@@ -12,6 +12,5 @@ set -x
 
 while :; do
 	randsleep 60
-	size=$(( 512 * $(( 1 + $RANDOM % 32 )) ))
-	$SUDO $ZFS set dnodesize=$size $DATASET
+	$SUDO $ZFS set dnodesize=$(rand_dnodesize) $DATASET
 done

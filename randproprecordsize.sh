@@ -12,8 +12,6 @@ set -x
 
 while :; do
 	randsleep 60
-	# powers of 2 between 512 and 8MiB
-	P2=$(( 9 + $(( $RANDOM % 15 )) ))
-	size=$(( 2 ** $P2 ))
+	size=`rand_recordsize`
 	$SUDO $ZFS set recordsize=$size $DATASET
 done

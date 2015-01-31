@@ -17,10 +17,10 @@ while :; do
 	# write up to MAX_WRITE_SIZE to it.
 	for f in $MOUNTPOINT/* ; do
 		if coinflip 66 ; then
-			$SUDO dd if=/dev/null of=$f
+			$SUDO dd oflag=nofollow if=/dev/null of="$f"
 			continue
 		fi
-		$SUDO dd if=/dev/urandom of=$f bs=512 \
+		$SUDO dd oflag=nofollow if=/dev/urandom of="$f" bs=512 \
 			count=$(( $RANDOM % $(( MAX_WRITE_SIZE / 512 )) ))
 	done
 done
