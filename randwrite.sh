@@ -13,9 +13,10 @@ set -x
 while :; do
 	randsleep 60
 	wait_for_mount $MOUNTPOINT
-	# Truncate each file with 2/3 probability, otherwise
+	# Truncate each file to 0 with 2/3 probability, otherwise
 	# write up to MAX_WRITE_SIZE to it.
 	for f in $MOUNTPOINT/* ; do
+		wait_for_mount $MOUNTPOINT
 		if coinflip 66 ; then
 			$SUDO dd oflag=nofollow if=/dev/null of="$f"
 			continue

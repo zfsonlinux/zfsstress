@@ -11,9 +11,8 @@ fi
 set -x
 
 while :; do
-	wait_for_mount $MOUNTPOINT
-
 	for ((i=0; i< $(( $RANDOM % 256 )); i++)) ; do
+		wait_for_mount $MOUNTPOINT
 		file="`randstring $(( 1 + $RANDOM % $MAX_FILENAME_LEN ))`"
 		$SUDO touch "$MOUNTPOINT/$file"
 	done
