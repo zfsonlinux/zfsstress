@@ -84,7 +84,7 @@ wait_for_mount()
 # Randomly select a ZFS dnode size
 #
 _MIN_DNODE_SIZE=512
-_DNODES_PER_BLOCK=512
+_DNODES_PER_BLOCK=32
 _MAX_DNODE_SIZE=$(( $_MIN_DNODE_SIZE * $_DNODES_PER_BLOCK ))
 for ((i=1; $(( $i * $_MIN_DNODE_SIZE )) <= $_MAX_DNODE_SIZE ; i++)) ; do
 	_DNSIZES+=( $(( $_MIN_DNODE_SIZE * $i )) )
