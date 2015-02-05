@@ -13,7 +13,7 @@ set -x
 while :; do
 	randsleep 60
 
-	for f in $MOUNTPOINT/* ; do
+	for f in $MOUNTPOINT/* $MOUNTPOINT/.* ; do
 		if coinflip 50 ; then
 			v=`randbase64`
 			$SUDO setfattr -h -n trusted.foo -v 0s$v "$f"

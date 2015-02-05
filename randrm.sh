@@ -12,7 +12,7 @@ set -x
 
 while :; do
 	randsleep 60
-	for f in $MOUNTPOINT/* ; do
+	for f in $MOUNTPOINT/* $MOUNTPONINT/.* ; do
 		if coinflip 33 ; then
 			$SUDO rm "$f"
 		fi

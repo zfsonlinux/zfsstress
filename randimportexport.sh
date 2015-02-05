@@ -15,6 +15,6 @@ while :; do
 	while ! $SUDO $ZPOOL export $POOL ; do
 		sleep 1
 	done
-	$SUDO rm -f $MOUNTPOINT/*
+	$SUDO rm -f $MOUNTPOINT/* $MOUNTPOINT/.*
 	$SUDO $ZPOOL import $ZPOOL_IMPORT_OPT $POOL
 done
