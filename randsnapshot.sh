@@ -15,8 +15,11 @@ while :; do
 
 	# Creat a snapshot then randomly destroy snapshots
 	# with 50% probability.
-	$SUDO $ZFS snap $DATASET@`date +%s`
-	$SUDO $ZFS list -H -o name -t snap | grep "^$DATASET@" |
+	ds=`rand_dataset`
+	snap=$(mktemp -u `perl -e 'print "X" x int rand 255 + 1'`)
+	$SUDO $ZFS snap $ds@$snap
+	$SUDO $ZFS list -H -o name -t snap |
+		grep -e "^$DATASET@" -e "^$DATASET/.*@" |
 	while read snap ; do
 		if coinflip 50 ; then
 			$SUDO $ZFS destroy $snap

@@ -12,6 +12,10 @@ set -x
 
 while :; do
 	randsleep 60
-	size=`rand_recordsize`
-	$SUDO $ZFS set recordsize=$size $DATASET
+	$SUDO $ZFS list -H -o name -t filesystem |
+		grep -e "^$DATASET$" -e "^$DATASET/" |
+	while read ds ; do
+		size=`rand_recordsize`
+		$SUDO $ZFS set recordsize=$size $ds
+	done
 done

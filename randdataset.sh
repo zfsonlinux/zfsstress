@@ -13,26 +13,30 @@ set -x
 
 while :; do
 	randsleep 60
-	ZFS_CREATE_OPT=""
 
-	if [ x$ZFS_CREATE_RAND_DNODESIZE = "x1" ] ; then
-		ZFS_CREATE_OPT+=" -o dnodesize=$(rand_dnodesize)"
-	fi
-
-	if [ x$ZFS_CREATE_RAND_RECORDSIZE = "x1" ] ; then
-		ZFS_CREATE_OPT+=" -o recordsize=$(rand_recordsize)"
-	fi
-
-	if [ x$ZFS_CREATE_RAND_COMPRESSION = "x1" ] ; then
-		ZFS_CREATE_OPT+=" -o compression=$(rand_compression)"
-	fi
-	# Create a dataset then randomly destroy datasets
+	# Create some datasets then randomly destroy datasets
 	# with 50% probability.
-	$SUDO $ZFS create $ZFS_CREATE_OPT $POOL/`mktemp -u XXXXXXXX`
-	$SUDO $ZFS list -H -o name -t filesystem| grep /| grep -v "^$DATASET$"|
+	for ((i=0; i< $(( $RANDOM % 64 )); i++)) ; do
+		parent=`rand_dataset`
+		ds=$(mktemp -u `perl -e 'print "X" x int rand 255 + 1'`)
+		ZFS_CREATE_OPT=""
+		if [ x$ZFS_CREATE_RAND_DNODESIZE = "x1" ] ; then
+			ZFS_CREATE_OPT+=" -o dnodesize=$(rand_dnodesize)"
+		fi
+
+		if [ x$ZFS_CREATE_RAND_RECORDSIZE = "x1" ] ; then
+			ZFS_CREATE_OPT+=" -o recordsize=$(rand_recordsize)"
+		fi
+
+		if [ x$ZFS_CREATE_RAND_COMPRESSION = "x1" ] ; then
+			ZFS_CREATE_OPT+=" -o compression=$(rand_compression)"
+		fi
+		$SUDO $ZFS create $ZFS_CREATE_OPT $parent/$ds
+	done
+	$SUDO $ZFS list -H -o name -t filesystem| grep "^$DATASET/"|
 	while read ds ; do
 		if coinflip 50 ; then
-			$SUDO $ZFS destroy $ds
+			$SUDO $ZFS destroy -rR $ds
 		fi
 	done
 done

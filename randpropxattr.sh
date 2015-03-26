@@ -12,10 +12,14 @@ set -x
 
 while :; do
 	randsleep 60
-	if coinflip 80 ; then
-		xattr="sa"
-	else
-		xattr="on"
-	fi
-	$SUDO $ZFS set xattr=$xattr $DATASET
+	$SUDO $ZFS list -H -o name -t filesystem |
+		grep -e "^$DATASET$" -e "^$DATASET/" |
+	while read ds ; do
+		if coinflip 80 ; then
+			xattr="sa"
+		else
+			xattr="on"
+		fi
+		$SUDO $ZFS set xattr=$xattr $ds
+	done
 done

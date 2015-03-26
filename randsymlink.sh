@@ -12,9 +12,11 @@ set -x
 
 while :; do
 	for ((i=0; i< $(( $RANDOM % 256 )); i++)) ; do
-		link=$MOUNTPOINT/$( randstring $(( 1 + $RANDOM % 255 )) )
-		target=$( randstring $(( 1 + $RANDOM % 4096 )) )
 		wait_for_mount $MOUNTPOINT
+		wait_for_export
+		parent=`rand_directory`
+		link=$parent/$( randstring $(( 1 + $RANDOM % 255 )) )
+		target=$( randstring $(( 1 + $RANDOM % 4096 )) )
 		$SUDO ln -sf "$target" "$link"
 	done
 	randsleep 60

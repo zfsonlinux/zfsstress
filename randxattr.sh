@@ -13,12 +13,20 @@ set -x
 while :; do
 	randsleep 60
 
-	for f in $MOUNTPOINT/* $MOUNTPOINT/.* ; do
+	wait_for_export
+	find $MOUNTPOINT | while read f ; do
 		if coinflip 50 ; then
 			v=`randbase64`
-			$SUDO setfattr -h -n trusted.foo -v 0s$v "$f"
+			n=$(mktemp -u `perl -e 'print "X" x int rand 247 + 1'`)
+			$SUDO setfattr -h -n trusted.$n -v 0s$v "$f"
 		else
-			$SUDO setfattr -h -x trusted.foo "$f"
+			$SUDO getfattr -h -m. -d "$f"| grep '^[^#]'|
+				cut -d= -f1 |
+			while read xattr ; do
+				if coinflip 80 ; then
+					$SUDO setfattr -h -x $xattr "$f"
+				fi
+			done
 		fi
 	done
 done

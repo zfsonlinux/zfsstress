@@ -13,8 +13,10 @@ set -x
 while :; do
 	for ((i=0; i< $(( $RANDOM % 256 )); i++)) ; do
 		wait_for_mount $MOUNTPOINT
+		wait_for_export
+		parent=`rand_directory`
 		file="`randstring $(( 1 + $RANDOM % $MAX_FILENAME_LEN ))`"
-		$SUDO touch "$MOUNTPOINT/$file"
+		$SUDO touch "$parent/$file"
 	done
 	randsleep 60
 done

@@ -13,15 +13,16 @@ set -x
 while :; do
 	randsleep 60
 	wait_for_mount $MOUNTPOINT
+	wait_for_export
 	# Truncate each file to 0 with 2/3 probability, otherwise
 	# write up to MAX_WRITE_SIZE to it.
-	for f in $MOUNTPOINT/* $MOUNTPOINT/.* ; do
+	find $MOUNTPOINT -type f | while read f ; do
 		wait_for_mount $MOUNTPOINT
 		if coinflip 66 ; then
-			$SUDO dd oflag=nofollow if=/dev/null of="$f"
+			$SUDO dd if=/dev/null of="$f"
 			continue
 		fi
-		$SUDO dd oflag=nofollow if=/dev/urandom of="$f" bs=512 \
+		$SUDO dd if=/dev/urandom of="$f" bs=512 \
 			count=$(( $RANDOM % $(( MAX_WRITE_SIZE / 512 )) ))
 	done
 done

@@ -1,10 +1,10 @@
 export POOL="tank"
 export DATASET="$POOL/fish"
 export MOUNTPOINT="/$DATASET"
-MOUNTPOINT_LEN=`echo -n $MOUNTPOINT | wc -c`
-export MAX_FILENAME_LEN=$(( 255 - $MOUNTPOINT_LEN ))
+export MAX_FILENAME_LEN=255
 export ZFS=${ZFS:-"/sbin/zfs"}
 export ZPOOL=${ZPOOL:-"/sbin/zpool"}
+export EXPORT_COOKIE=${EXPORT_COOKIE:-`mktemp -t XXXXXXXX`}
 
 # Write up to MAX_WRITE_SIZE bytes to randomly selected files
 # in the root of $DATASET.
@@ -16,7 +16,7 @@ export MAX_WRITE_SIZE=$(( 4 * 1024 * 1024 ))
 export ZFS_CREATE_RAND_RECORDSIZE=1
 export ZFS_CREATE_RAND_COMPRESSION=1
 
-export ZPOOL_IMPORT_OPT="-d /tmp"
+#export ZPOOL_IMPORT_OPT="-d /tmp"
 ## comment SUDO if running scripts as root
 export SUDO="sudo"
 
@@ -46,14 +46,12 @@ randsleep()
 }
 
 #
-# Generate a random character string. Exclude exclamation point (ASCII
-# 33) double quote (ASCII 34) single quote (ASCII 39) and forward slash
-# (ASCII 47) for easier quoting.
+# Generate a random alphanumeric string.
 #
 randstring()
 {
 	echo $( perl -e '
-		@a = map {chr} 35..38,40..46,48..126;
+		@a = ("a".."z","A".."Z",0..9,"_");
 		print map {$a[rand scalar @a]} 1..$ARGV[0]||8;
 	' $1 )
 }
@@ -64,7 +62,7 @@ randstring()
 #
 randbase64()
 {
-	local MAXBYTES=${1:-'4096'}
+	local MAXBYTES=${1:-'65536'}
 	dd if=/dev/urandom bs=1 count=$(( $RANDOM % $MAXBYTES )) 2>/dev/null |
 		openssl enc -a -A
 }
@@ -76,6 +74,32 @@ randbase64()
 wait_for_mount()
 {
 	while ! mount | awk '{print $3}' | grep -q "^$1$"; do
+		sleep 5
+	done
+}
+
+#
+# Set a flag indicating jobs should pause so the pool can be exported.
+#
+set_export_flag()
+{
+	echo exporting > $EXPORT_COOKIE
+}
+
+#
+# Clear the exporting flag so waiting jobs can resume.
+#
+clear_export_flag()
+{
+	> $EXPORT_COOKIE
+}
+
+#
+# Sleep in 5 second intervals while the pool is being exported.
+#
+wait_for_export()
+{
+	while grep -q '^exporting$' $EXPORT_COOKIE ; do
 		sleep 5
 	done
 }
@@ -131,4 +155,18 @@ rand_compression()
 		lz4
 	)
 	echo ${ALG[$(( $RANDOM % ${#ALG[@]}))]}
+}
+
+rand_directory()
+{
+	local TOP=${1:-$MOUNTPOINT}
+	DIRS=(`$SUDO find $TOP -type d`)
+	echo ${DIRS[$(( $RANDOM % ${#DIRS[@]}))]}
+}
+
+rand_dataset()
+{
+	local TOP=${1:-$DATASET}
+	DS=(`$SUDO $ZFS list -H -o name -t filesystem| grep "^$TOP"`)
+	echo ${DS[$(( $RANDOM % ${#DS[@]}))]}
 }

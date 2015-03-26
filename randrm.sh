@@ -12,9 +12,11 @@ set -x
 
 while :; do
 	randsleep 60
-	for f in $MOUNTPOINT/* $MOUNTPONINT/.* ; do
+	wait_for_mount $MOUNTPOINT
+	wait_for_export
+	find $MOUNTPOINT -mindepth 1 | while read f ; do
 		if coinflip 33 ; then
-			$SUDO rm "$f"
+			$SUDO rm -rf "$f"
 		fi
 	done
 done
