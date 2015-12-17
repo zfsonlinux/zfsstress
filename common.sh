@@ -16,7 +16,7 @@ export MAX_WRITE_SIZE=$(( 4 * 1024 * 1024 ))
 export ZFS_CREATE_RAND_RECORDSIZE=1
 export ZFS_CREATE_RAND_COMPRESSION=1
 
-#export ZPOOL_IMPORT_OPT="-d /tmp"
+export ZPOOL_IMPORT_OPT=${ZPOOL_IMPORT_OPT:-"-d /tmp"}
 ## comment SUDO if running scripts as root
 export SUDO="sudo"
 
