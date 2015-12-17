@@ -168,5 +168,16 @@ rand_dataset()
 {
 	local TOP=${1:-$DATASET}
 	DS=(`$SUDO $ZFS list -H -o name -t filesystem| grep "^$TOP"`)
-	echo ${DS[$(( $RANDOM % ${#DS[@]}))]}
+	if [ ${#DS[@]} -ne 0 ] ; then
+		echo ${DS[$(( $RANDOM % ${#DS[@]}))]}
+	fi
+}
+
+rand_snapshot()
+{
+	local TOP=${1:-$DATASET}
+	SNAP=(`$SUDO $ZFS list -H -o name -t snap| grep "^$TOP"`)
+	if [ ${#SNAP[@]} -ne 0 ] ; then
+		echo ${SNAP[$(( $RANDOM % ${#SNAP[@]}))]}
+	fi
 }
