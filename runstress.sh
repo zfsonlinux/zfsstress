@@ -36,6 +36,7 @@ pushd $basedir > /dev/null
 # Dataset operations.
 ./randsnapshot.sh < /dev/null > randsnapshot.log 2>&1 &
 ./randdataset.sh < /dev/null > randdataset.log 2>&1 &
+./randsendrecv.sh < /dev/null > randsendrecv.log 2>&1 &
 
 # Randomly change dataset properties.
 ./randproprecordsize.sh < /dev/null > randproprecordsize.log 2>&1 &
