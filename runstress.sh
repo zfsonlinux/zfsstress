@@ -11,38 +11,38 @@ fi
 pushd $basedir > /dev/null
 
 # Run more instances to increase stress level.
-./randcreate.sh < /dev/null > randcreate.log 2>&1 &
-./randcreate.sh < /dev/null > randcreate2.log 2>&1 &
+./randcreate.sh < /dev/null > ${LOGDIR}/randcreate.log 2>&1 &
+./randcreate.sh < /dev/null > ${LOGDIR}/randcreate2.log 2>&1 &
 
-./randwrite.sh < /dev/null > randwrite.log 2>&1 &
-./randwrite.sh < /dev/null > randwrite2.log 2>&1 &
+./randwrite.sh < /dev/null > ${LOGDIR}/randwrite.log 2>&1 &
+./randwrite.sh < /dev/null > ${LOGDIR}/randwrite2.log 2>&1 &
 
-./randrm.sh < /dev/null > randrm.log 2>&1 &
-./randrm.sh < /dev/null > randrm2.log 2>&1 &
+./randrm.sh < /dev/null > ${LOGDIR}/randrm.log 2>&1 &
+./randrm.sh < /dev/null > ${LOGDIR}/randrm2.log 2>&1 &
 
-./randxattr.sh < /dev/null > randxattr.log 2>&1 &
-./randxattr.sh < /dev/null > randxattr2.log 2>&1 &
+./randxattr.sh < /dev/null > ${LOGDIR}/randxattr.log 2>&1 &
+./randxattr.sh < /dev/null > ${LOGDIR}/randxattr2.log 2>&1 &
 
-./randsymlink.sh < /dev/null > randsymlink.log 2>&1 &
-./randsymlink.sh < /dev/null > randsymlink2.log 2>&1 &
+./randsymlink.sh < /dev/null > ${LOGDIR}/randsymlink.log 2>&1 &
+./randsymlink.sh < /dev/null > ${LOGDIR}/randsymlink2.log 2>&1 &
 
-./randmkdir.sh < /dev/null > randmkdir.log 2>&1 &
-./randmkdir.sh < /dev/null > randmkdir2.log 2>&1 &
+./randmkdir.sh < /dev/null > ${LOGDIR}/randmkdir.log 2>&1 &
+./randmkdir.sh < /dev/null > ${LOGDIR}/randmkdir2.log 2>&1 &
 
 # Pool operations.
-./randimportexport.sh < /dev/null > randimportexport.log 2>&1 &
-./randscrub.sh < /dev/null > randscrub.log 2>&1 &
+./randimportexport.sh < /dev/null > ${LOGDIR}/randimportexport.log 2>&1 &
+./randscrub.sh < /dev/null > ${LOGDIR}/randscrub.log 2>&1 &
 
 # Dataset operations.
-./randsnapshot.sh < /dev/null > randsnapshot.log 2>&1 &
-./randdataset.sh < /dev/null > randdataset.log 2>&1 &
-./randsendrecv.sh < /dev/null > randsendrecv.log 2>&1 &
+./randsnapshot.sh < /dev/null > ${LOGDIR}/randsnapshot.log 2>&1 &
+./randdataset.sh < /dev/null > ${LOGDIR}/randdataset.log 2>&1 &
+./randsendrecv.sh < /dev/null > ${LOGDIR}/randsendrecv.log 2>&1 &
 
 # Randomly change dataset properties.
-./randproprecordsize.sh < /dev/null > randproprecordsize.log 2>&1 &
-./randpropdnodesize.sh < /dev/null > randpropdnodesize.log 2>&1 &
-./randpropxattr.sh < /dev/null > randpropxattr.log 2>&1 &
-./randpropcompression.sh < /dev/null > randpropcompression.log 2>&1 &
+./randproprecordsize.sh < /dev/null > ${LOGDIR}/randproprecordsize.log 2>&1 &
+./randpropdnodesize.sh < /dev/null > ${LOGDIR}/randpropdnodesize.log 2>&1 &
+./randpropxattr.sh < /dev/null > ${LOGDIR}/randpropxattr.log 2>&1 &
+./randpropcompression.sh < /dev/null > ${LOGDIR}/randpropcompression.log 2>&1 &
 
 popd > /dev/null
 
