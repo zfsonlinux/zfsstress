@@ -16,7 +16,7 @@ while :; do
 	wait_for_export
 	# Truncate each file to 0 with 2/3 probability, otherwise
 	# write up to MAX_WRITE_SIZE to it.
-	find $MOUNTPOINT -type f | while read f ; do
+	find $ROOTDIR -type f | while read f ; do
 		wait_for_mount $MOUNTPOINT
 		if coinflip 66 ; then
 			$SUDO dd if=/dev/null of="$f"
