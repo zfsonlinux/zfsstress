@@ -11,7 +11,7 @@ fi
 set -x
 
 while :; do
-	randsleep 60
+	randsleep
 	wait_for_mount $MOUNTPOINT
 	wait_for_export
 	find $ROOTDIR -mindepth 1 | while read f ; do

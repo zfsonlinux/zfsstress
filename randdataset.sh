@@ -12,7 +12,7 @@ set -x
 
 
 while :; do
-	randsleep 60
+	randsleep
 
 	# Create some datasets then randomly destroy datasets
 	# with 50% probability.

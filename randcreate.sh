@@ -18,5 +18,5 @@ while :; do
 		file="`randstring $(( 1 + $RANDOM % $MAX_FILENAME_LEN ))`"
 		$SUDO touch "$parent/$file"
 	done
-	randsleep 60
+	randsleep
 done
