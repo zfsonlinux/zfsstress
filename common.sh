@@ -157,6 +157,15 @@ rand_compression()
 	echo ${ALG[$(( $RANDOM % ${#ALG[@]}))]}
 }
 
+rand_file()
+{
+	local local_root=$(rand_directory)
+	FILES=(`$SUDO find $local_root -type f`)
+	if [[ ${#FILES[@]} -gt 0 ]]; then
+		echo ${FILES[$(( $RANDOM % ${#FILES[@]}))]}
+	fi
+}
+
 rand_directory()
 {
 	local TOP=${1:-$MOUNTPOINT}
