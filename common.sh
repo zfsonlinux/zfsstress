@@ -161,7 +161,11 @@ rand_directory()
 {
 	local TOP=${1:-$MOUNTPOINT}
 	DIRS=(`$SUDO find $TOP -type d`)
-	echo ${DIRS[$(( $RANDOM % ${#DIRS[@]}))]}
+	if [[ ${#DIRS[@]} -gt 0 ]]; then
+		echo ${DIRS[$(( $RANDOM % ${#DIRS[@]}))]}
+	else
+		echo $TOP
+	fi
 }
 
 rand_dataset()
