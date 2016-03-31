@@ -11,7 +11,7 @@ fi
 set -x
 
 while :; do
-	randsleep 60
+	randsleep
 
 	wait_for_export
 	find $MOUNTPOINT | while read f ; do

@@ -18,5 +18,5 @@ while :; do
 		newdir="`randstring $(( 1 + $RANDOM % $MAX_FILENAME_LEN ))`"
 		$SUDO mkdir "$parent/$newdir"
 	done
-	randsleep 60
+	randsleep
 done
