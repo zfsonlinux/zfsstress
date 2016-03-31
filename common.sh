@@ -8,7 +8,6 @@ export ZPOOL=${ZPOOL:-"/sbin/zpool"}
 export EXPORT_COOKIE=${EXPORT_COOKIE:-`mktemp -t XXXXXXXX`}
 
 # Write up to MAX_WRITE_SIZE bytes to randomly selected files
-# in the root of $MOUNTPOINT (by default, $DATASET).
 export MAX_WRITE_SIZE=$(( 4 * 1024 * 1024 ))
 
 # Randomly select values for these properties when creating
