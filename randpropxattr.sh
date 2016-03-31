@@ -11,7 +11,7 @@ fi
 set -x
 
 while :; do
-	randsleep 60
+	randsleep
 	$SUDO $ZFS list -H -o name -t filesystem |
 		grep -e "^$DATASET$" -e "^$DATASET/" |
 	while read ds ; do

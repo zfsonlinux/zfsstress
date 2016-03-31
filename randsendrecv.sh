@@ -11,7 +11,7 @@ fi
 set -x
 
 while :; do
-	randsleep 60
+	randsleep
 
 	# Pick a random snapshot and send/recv it to a new
 	# dataset in the pool. This relies on snapshots being

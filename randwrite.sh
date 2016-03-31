@@ -11,7 +11,7 @@ fi
 set -x
 
 while :; do
-	randsleep 60
+	randsleep
 	wait_for_mount $MOUNTPOINT
 	wait_for_export
 	# Truncate each file to 0 with 2/3 probability, otherwise

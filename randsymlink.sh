@@ -19,5 +19,5 @@ while :; do
 		target=$( randstring $(( 1 + $RANDOM % 4096 )) )
 		$SUDO ln -sf "$target" "$link"
 	done
-	randsleep 60
+	randsleep
 done
