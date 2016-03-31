@@ -23,6 +23,43 @@ export ZPOOL_IMPORT_OPT=${ZPOOL_IMPORT_OPT:-"-d /tmp"}
 export SUDO="sudo"
 
 #
+# Run $COUNT instances of $CMD, saving the
+# output in ${LOGDIR}/$CMD.$HOSTNAME.$$.$instance.log
+# XXX: the size of the log file is not bounded.  For
+# long runs it may fill up the filesystem, exceed the
+# quota, etc.  Will need an implementation of log_writer
+# below.
+#
+runmany()
+{
+	local COUNT=${1:-'2'}
+	shift 1
+	local CMD=${@:-'echo hello'}
+	local x=0
+	local logname
+	set -x
+	for instance in $(seq $COUNT); do
+		logname="${LOGDIR}/${CMD}.${HOSTNAME}.$$.${instance}.log"
+		$CMD < /dev/null > ${logname} 2>&1 &
+	done
+	set +x
+}
+
+#
+# Placeholder for a log writer that would be used by runmany.
+# Needs to limit the size of the logs written, keeping only the
+# last N MB or lines, like a ring buffer.  Two ideas:
+#   script_output -> csplit -> LOGDIR/logfile.{1,2,...}
+#     with periodic removal of logfile.(n-2) as long as logfile.n
+#     exists.
+#   script output -> pipe -> put last N lines into LOGDIR/logfile.a,
+#     then read last N lines into LOGDIR/logfile.b, then back to a.
+log_writer()
+{
+	echo "not implemented"
+}
+
+#
 # Randomly return 0 or 1, biased toward 0 with
 # the percent probability specified as an argument,
 # or with no bias if no argument is given.
@@ -183,3 +220,4 @@ rand_snapshot()
 		echo ${SNAP[$(( $RANDOM % ${#SNAP[@]}))]}
 	fi
 }
+
