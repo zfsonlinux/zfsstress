@@ -16,7 +16,8 @@ while :; do
 
 	# Create some datasets then randomly destroy datasets
 	# with 50% probability.
-	for ((i=0; i< $(( $RANDOM % 64 )); i++)) ; do
+	let loops=$(( $RANDOM % 64 ))
+	for ((i=0; i< ${loops} ; i++)) ; do
 		parent=`rand_dataset`
 		ds=$(mktemp -u `perl -e 'print "X" x int rand 255 + 1'`)
 		ZFS_CREATE_OPT=""
