@@ -1,13 +1,13 @@
 export POOL="tank"
 export DATASET="$POOL/fish"
-export MOUNTPOINT="/$DATASET"
+export MOUNTPOINT=${MOUNTPOINT:-"/$DATASET"}
+export ROOTDIR=${ROOTDIR:-"/$MOUNTPOINT"}
 export MAX_FILENAME_LEN=255
 export ZFS=${ZFS:-"/sbin/zfs"}
 export ZPOOL=${ZPOOL:-"/sbin/zpool"}
 export EXPORT_COOKIE=${EXPORT_COOKIE:-`mktemp -t XXXXXXXX`}
 
 # Write up to MAX_WRITE_SIZE bytes to randomly selected files
-# in the root of $DATASET.
 export MAX_WRITE_SIZE=$(( 4 * 1024 * 1024 ))
 
 # Randomly select values for these properties when creating
@@ -159,7 +159,7 @@ rand_compression()
 
 rand_directory()
 {
-	local TOP=${1:-$MOUNTPOINT}
+	local TOP=${1:-$ROOTDIR}
 	DIRS=(`$SUDO find $TOP -type d`)
 	echo ${DIRS[$(( $RANDOM % ${#DIRS[@]}))]}
 }
