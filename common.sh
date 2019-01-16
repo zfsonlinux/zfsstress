@@ -1,13 +1,15 @@
 export POOL="tank"
 export DATASET="$POOL/fish"
-export MOUNTPOINT="/$DATASET"
+export LOGDIR=${LOGDIR:-"./"}
+export MOUNTPOINT=${MOUNTPOINT:-"/$DATASET"}
+export ROOTDIR=${ROOTDIR:-"/$MOUNTPOINT"}
 export MAX_FILENAME_LEN=255
 export ZFS=${ZFS:-"/sbin/zfs"}
 export ZPOOL=${ZPOOL:-"/sbin/zpool"}
 export EXPORT_COOKIE=${EXPORT_COOKIE:-`mktemp -t XXXXXXXX`}
 
 # Write up to MAX_WRITE_SIZE bytes to randomly selected files
-# in the root of $DATASET.
+# in the root of $MOUNTPOINT (by default, $DATASET).
 export MAX_WRITE_SIZE=$(( 4 * 1024 * 1024 ))
 
 # Randomly select values for these properties when creating
@@ -19,6 +21,43 @@ export ZFS_CREATE_RAND_COMPRESSION=1
 export ZPOOL_IMPORT_OPT=${ZPOOL_IMPORT_OPT:-"-d /tmp"}
 ## comment SUDO if running scripts as root
 export SUDO="sudo"
+
+#
+# Run $COUNT instances of $CMD, saving the
+# output in ${LOGDIR}/$CMD.$HOSTNAME.$$.$instance.log
+# XXX: the size of the log file is not bounded.  For
+# long runs it may fill up the filesystem, exceed the
+# quota, etc.  Will need an implementation of log_writer
+# below.
+#
+runmany()
+{
+	local COUNT=${1:-'2'}
+	shift 1
+	local CMD=${@:-'echo hello'}
+	local x=0
+	local logname
+	set -x
+	for instance in $(seq $COUNT); do
+		logname="${LOGDIR}/${CMD}.${HOSTNAME}.$$.${instance}.log"
+		$CMD < /dev/null > ${logname} 2>&1 &
+	done
+	set +x
+}
+
+#
+# Placeholder for a log writer that would be used by runmany.
+# Needs to limit the size of the logs written, keeping only the
+# last N MB or lines, like a ring buffer.  Two ideas:
+#   script_output -> csplit -> LOGDIR/logfile.{1,2,...}
+#     with periodic removal of logfile.(n-2) as long as logfile.n
+#     exists.
+#   script output -> pipe -> put last N lines into LOGDIR/logfile.a,
+#     then read last N lines into LOGDIR/logfile.b, then back to a.
+log_writer()
+{
+	echo "not implemented"
+}
 
 #
 # Randomly return 0 or 1, biased toward 0 with
@@ -157,16 +196,41 @@ rand_compression()
 	echo ${ALG[$(( $RANDOM % ${#ALG[@]}))]}
 }
 
+rand_file()
+{
+	local local_root=$(rand_directory)
+	FILES=(`$SUDO find $local_root -type f`)
+	if [[ ${#FILES[@]} -gt 0 ]]; then
+		echo ${FILES[$(( $RANDOM % ${#FILES[@]}))]}
+	fi
+}
+
 rand_directory()
 {
-	local TOP=${1:-$MOUNTPOINT}
+	local TOP=${1:-$ROOTDIR}
 	DIRS=(`$SUDO find $TOP -type d`)
-	echo ${DIRS[$(( $RANDOM % ${#DIRS[@]}))]}
+	if [[ ${#DIRS[@]} -gt 0 ]]; then
+		echo ${DIRS[$(( $RANDOM % ${#DIRS[@]}))]}
+	else
+		echo $TOP
+	fi
 }
 
 rand_dataset()
 {
 	local TOP=${1:-$DATASET}
 	DS=(`$SUDO $ZFS list -H -o name -t filesystem| grep "^$TOP"`)
-	echo ${DS[$(( $RANDOM % ${#DS[@]}))]}
+	if [ ${#DS[@]} -ne 0 ] ; then
+		echo ${DS[$(( $RANDOM % ${#DS[@]}))]}
+	fi
 }
+
+rand_snapshot()
+{
+	local TOP=${1:-$DATASET}
+	SNAP=(`$SUDO $ZFS list -H -o name -t snap| grep "^$TOP"`)
+	if [ ${#SNAP[@]} -ne 0 ] ; then
+		echo ${SNAP[$(( $RANDOM % ${#SNAP[@]}))]}
+	fi
+}
+

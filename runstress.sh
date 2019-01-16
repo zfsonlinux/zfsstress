@@ -11,37 +11,29 @@ fi
 pushd $basedir > /dev/null
 
 # Run more instances to increase stress level.
-./randcreate.sh < /dev/null > randcreate.log 2>&1 &
-./randcreate.sh < /dev/null > randcreate2.log 2>&1 &
 
-./randwrite.sh < /dev/null > randwrite.log 2>&1 &
-./randwrite.sh < /dev/null > randwrite2.log 2>&1 &
+# User operations
+runmany 2 ./randcreate.sh
+runmany 2 ./randwrite.sh
+runmany 2 ./randrm.sh
+runmany 2 ./randxattr.sh
+runmany 2 ./randsymlink.sh
+runmany 2 ./randmkdir.sh
 
-./randrm.sh < /dev/null > randrm.log 2>&1 &
-./randrm.sh < /dev/null > randrm2.log 2>&1 &
-
-./randxattr.sh < /dev/null > randxattr.log 2>&1 &
-./randxattr.sh < /dev/null > randxattr2.log 2>&1 &
-
-./randsymlink.sh < /dev/null > randsymlink.log 2>&1 &
-./randsymlink.sh < /dev/null > randsymlink2.log 2>&1 &
-
-./randmkdir.sh < /dev/null > randmkdir.log 2>&1 &
-./randmkdir.sh < /dev/null > randmkdir2.log 2>&1 &
-
-# Pool operations.
-./randimportexport.sh < /dev/null > randimportexport.log 2>&1 &
-./randscrub.sh < /dev/null > randscrub.log 2>&1 &
+## Pool operations.
+runmany 1 ./randimportexport.sh
+runmany 1 ./randscrub.sh
 
 # Dataset operations.
-./randsnapshot.sh < /dev/null > randsnapshot.log 2>&1 &
-./randdataset.sh < /dev/null > randdataset.log 2>&1 &
+runmany 1 ./randsnapshot.sh
+runmany 1 ./randdataset.sh
+runmany 1 ./randsendrecv.sh
 
 # Randomly change dataset properties.
-./randproprecordsize.sh < /dev/null > randproprecordsize.log 2>&1 &
-./randpropdnodesize.sh < /dev/null > randpropdnodesize.log 2>&1 &
-./randpropxattr.sh < /dev/null > randpropxattr.log 2>&1 &
-./randpropcompression.sh < /dev/null > randpropcompression.log 2>&1 &
+runmany 1 ./randproprecordsize.sh
+runmany 1 ./randpropdnodesize.sh
+runmany 1 ./randpropxattr.sh
+runmany 1 ./randpropcompression.sh
 
 popd > /dev/null
 

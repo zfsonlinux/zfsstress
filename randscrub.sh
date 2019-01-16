@@ -10,6 +10,6 @@ fi
 set -x
 
 while :; do
-	randsleep 60
+	randsleep
 	$SUDO $ZPOOL scrub $POOL
 done

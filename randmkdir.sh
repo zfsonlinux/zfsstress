@@ -11,12 +11,13 @@ fi
 set -x
 
 while :; do
-	for ((i=0; i< $(( $RANDOM % 64 )); i++)) ; do
+	let loops=$(( $RANDOM % 64 ))
+	for ((i=0; i< ${loops} ; i++)) ; do
 		wait_for_mount $MOUNTPOINT
 		wait_for_export
 		parent=`rand_directory`
 		newdir="`randstring $(( 1 + $RANDOM % $MAX_FILENAME_LEN ))`"
 		$SUDO mkdir "$parent/$newdir"
 	done
-	randsleep 60
+	randsleep
 done

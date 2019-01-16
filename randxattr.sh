@@ -11,10 +11,10 @@ fi
 set -x
 
 while :; do
-	randsleep 60
+	randsleep
 
 	wait_for_export
-	find $MOUNTPOINT | while read f ; do
+	find $ROOTDIR | while read f ; do
 		if coinflip 50 ; then
 			v=`randbase64`
 			n=$(mktemp -u `perl -e 'print "X" x int rand 247 + 1'`)

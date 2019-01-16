@@ -17,6 +17,6 @@ while :; do
 		sleep 1
 	done
 	clear_export_flag
-	$SUDO rm -f $MOUNTPOINT/* $MOUNTPOINT/.*
+	$SUDO rm -f $ROOTDIR/* $ROOTDIR/.*
 	$SUDO $ZPOOL import $ZPOOL_IMPORT_OPT $POOL
 done

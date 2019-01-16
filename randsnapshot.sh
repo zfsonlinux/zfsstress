@@ -11,7 +11,7 @@ fi
 set -x
 
 while :; do
-	randsleep 60
+	randsleep
 
 	# Creat a snapshot then randomly destroy snapshots
 	# with 50% probability.
